@@ -33,6 +33,7 @@ type TeamLookup = {
 };
 
 const FOOTBALL_DATA_BASE_URL = "https://api.football-data.org/v4";
+const FOOTBALL_DATA_TIMEOUT_MS = 8000;
 const NO_RECENT_MATCH: TeamResult = {
   available: false,
   scoreline: "No recent match available",
@@ -75,23 +76,33 @@ export async function fetchTeamMatches(teamId: number) {
     throw new Error("FOOTBALL_DATA_API_KEY is not configured.");
   }
 
-  const response = await fetch(
-    `${FOOTBALL_DATA_BASE_URL}/teams/${teamId}/matches?status=FINISHED&limit=10`,
-    {
-      cache: "no-store",
-      headers: {
-        "X-Auth-Token": apiKey
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FOOTBALL_DATA_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(
+      `${FOOTBALL_DATA_BASE_URL}/teams/${teamId}/matches?status=FINISHED&limit=10`,
+      {
+        cache: "no-store",
+        headers: {
+          "X-Auth-Token": apiKey
+        },
+        signal: controller.signal
       }
+    );
+
+    const data = (await response.json()) as FootballDataMatchesResponse;
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || `football-data.org request failed with ${response.status}.`
+      );
     }
-  );
 
-  const data = (await response.json()) as FootballDataMatchesResponse;
-
-  if (!response.ok) {
-    throw new Error(data.message || `football-data.org request failed with ${response.status}.`);
+    return data.matches || [];
+  } finally {
+    clearTimeout(timeout);
   }
-
-  return data.matches || [];
 }
 
 export async function fetchLatestTeamResult(team: TeamLookup): Promise<TeamResult> {
