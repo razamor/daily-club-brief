@@ -61,7 +61,7 @@ a {
 .brand-mark {
   display: grid;
   place-items: center;
-  width: 42px;
+  width: 48px;
   height: 42px;
   border: 2px solid #171717;
   border-radius: 8px;
@@ -184,6 +184,7 @@ h3 {
 .team-card {
   display: grid;
   gap: 18px;
+  align-content: start;
   min-height: 250px;
   padding: 24px;
 }
@@ -217,27 +218,40 @@ h3 {
   font-weight: 900;
 }
 
-.team-badge {
-  --team-primary: var(--accent);
-  --team-secondary: #171717;
+.team-crest-frame {
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
+  width: 92px;
+  height: 92px;
   border: 2px solid #171717;
-  border-radius: 50%;
-  background: var(--team-primary);
-  color: var(--team-secondary);
-  font-size: 0.82rem;
-  font-weight: 950;
-  letter-spacing: 0;
+  border-radius: 8px;
+  background: #ffffff;
   box-shadow: 5px 5px 0 #171717;
 }
 
-.team-badge.large {
-  width: 88px;
-  height: 88px;
-  font-size: 1rem;
+.team-crest {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.team-name-fallback {
+  width: fit-content;
+  border: 2px solid #171717;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: var(--accent-3);
+  color: #171717;
+  font-weight: 950;
+  box-shadow: 5px 5px 0 #171717;
+}
+
+.team-name-fallback.compact {
+  max-width: 140px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  line-height: 1.2;
 }
 
 .brief-list {

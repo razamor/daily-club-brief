@@ -1,5 +1,4 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import { teamBriefs } from "@/lib/mockBriefs";
 
 export default function DailyBriefPage() {
@@ -8,9 +7,9 @@ export default function DailyBriefPage() {
       <header className="site-header" aria-label="Primary navigation">
         <Link className="brand" href="/">
           <span className="brand-mark" aria-hidden="true">
-            JB
+            JDB
           </span>
-          <span>JustBanter</span>
+          <span>JustDailyBanter</span>
         </Link>
         <nav className="nav-links" aria-label="Main menu">
           <Link href="/daily-brief" aria-current="page">
@@ -32,16 +31,7 @@ export default function DailyBriefPage() {
         {teamBriefs.map((team) => (
           <article className="brief-card" key={team.name}>
             <div className="brief-card-header">
-              <div
-                className="team-badge"
-                style={{
-                  "--team-primary": team.colors.primary,
-                  "--team-secondary": team.colors.secondary
-                } as CSSProperties}
-                aria-hidden="true"
-              >
-                {team.shortName}
-              </div>
+              <div className="team-name-fallback compact">{team.name}</div>
               <div>
                 <h2>{team.name}</h2>
                 <p>{team.date}</p>
@@ -69,7 +59,7 @@ export default function DailyBriefPage() {
       </section>
 
       <footer className="site-footer">
-        <p>JustBanter is using mock placeholder content only.</p>
+        <p>JustDailyBanter is using mock placeholder brief content only.</p>
         <p>Real sources can be wired in later.</p>
       </footer>
     </main>

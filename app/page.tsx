@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import Image from "next/image";
 import { fetchLatestTeamResults } from "@/lib/footballData";
 import { teamBriefs } from "@/lib/mockBriefs";
 
@@ -18,9 +18,9 @@ export default async function Home() {
       <header className="site-header" aria-label="Primary navigation">
         <Link className="brand" href="/">
           <span className="brand-mark" aria-hidden="true">
-            JB
+            JDB
           </span>
-          <span>JustBanter</span>
+          <span>JustDailyBanter</span>
         </Link>
         <nav className="nav-links" aria-label="Main menu">
           <Link href="/daily-brief">Daily Brief</Link>
@@ -29,7 +29,7 @@ export default async function Home() {
 
       <section className="home-hero" aria-labelledby="hero-title">
         <p className="eyebrow">Soccer briefs, minus the noise</p>
-        <h1 id="hero-title">JustBanter</h1>
+        <h1 id="hero-title">JustDailyBanter</h1>
         <p className="hero-text">
           A playful daily summary MVP for keeping tabs on the clubs you care
           about. For now, everything here is friendly placeholder content.
@@ -54,7 +54,7 @@ export default async function Home() {
       </section>
 
       <footer className="site-footer">
-        <p>JustBanter is a two-page MVP with mock content only.</p>
+        <p>JustDailyBanter is a two-page MVP with live scores and mock brief content.</p>
         <p>
           <Link href="/daily-brief">Read the Daily Brief</Link>
         </p>
@@ -72,16 +72,19 @@ function TeamCard({
 }) {
   return (
     <article className="team-card">
-      <div
-        className="team-badge large"
-        style={{
-          "--team-primary": team.colors.primary,
-          "--team-secondary": team.colors.secondary
-        } as CSSProperties}
-        aria-hidden="true"
-      >
-        {team.shortName}
-      </div>
+      {result.crestUrl ? (
+        <div className="team-crest-frame">
+          <Image
+            className="team-crest"
+            src={result.crestUrl}
+            alt={`${team.name} crest`}
+            width={64}
+            height={64}
+          />
+        </div>
+      ) : (
+        <div className="team-name-fallback">{team.name}</div>
+      )}
       <h3>{team.name}</h3>
       {result.available ? (
         <div className="latest-result">

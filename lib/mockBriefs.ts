@@ -1,6 +1,5 @@
 export type TeamBrief = {
   name: string;
-  shortName: string;
   footballDataTeamId: number;
   colors: {
     primary: string;
@@ -14,7 +13,6 @@ export type TeamBrief = {
 export const teamBriefs: TeamBrief[] = [
   {
     name: "AC Milan",
-    shortName: "ACM",
     footballDataTeamId: 98,
     colors: {
       primary: "#d71920",
@@ -31,7 +29,6 @@ export const teamBriefs: TeamBrief[] = [
   },
   {
     name: "Leeds",
-    shortName: "LEE",
     footballDataTeamId: 341,
     colors: {
       primary: "#ffcd00",
@@ -48,7 +45,6 @@ export const teamBriefs: TeamBrief[] = [
   },
   {
     name: "Chelsea",
-    shortName: "CHE",
     footballDataTeamId: 61,
     colors: {
       primary: "#034694",

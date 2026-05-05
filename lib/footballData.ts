@@ -1,6 +1,7 @@
 type FootballDataTeam = {
   id: number;
   name: string;
+  crest?: string;
 };
 
 type FootballDataMatch = {
@@ -23,6 +24,7 @@ type FootballDataMatchesResponse = {
 
 export type TeamResult = {
   available: boolean;
+  crestUrl?: string;
   scoreline: string;
   status: string;
 };
@@ -57,6 +59,7 @@ function formatLatestResult(match: FootballDataMatch, team: TeamLookup): TeamRes
   const teamScore = isHomeTeam ? match.score.fullTime.home : match.score.fullTime.away;
   const opponentScore = isHomeTeam ? match.score.fullTime.away : match.score.fullTime.home;
   const opponent = isHomeTeam ? match.awayTeam.name : match.homeTeam.name;
+  const currentTeam = isHomeTeam ? match.homeTeam : match.awayTeam;
 
   if (teamScore === null || opponentScore === null) {
     return NO_RECENT_MATCH;
@@ -64,6 +67,7 @@ function formatLatestResult(match: FootballDataMatch, team: TeamLookup): TeamRes
 
   return {
     available: true,
+    crestUrl: currentTeam.crest,
     scoreline: `${team.name} ${teamScore} - ${opponentScore} ${compactTeamName(opponent)}`,
     status: "Final"
   };
