@@ -34,12 +34,8 @@ export default async function Home() {
       </header>
 
       <section className="home-hero" aria-labelledby="hero-title">
-        <p className="eyebrow">Soccer briefs, minus the noise</p>
         <h1 id="hero-title">JustDailyBanter</h1>
-        <p className="hero-text">
-          A playful daily summary MVP for keeping tabs on the clubs you care
-          about. For now, everything here is friendly placeholder content.
-        </p>
+        <p className="hero-tagline">Soccer briefs, minus the noise</p>
       </section>
 
       <section className="teams-section" aria-labelledby="teams-title">
@@ -55,6 +51,7 @@ export default async function Home() {
               team={team}
               result={latestResults[team.name]}
               leagueTable={leagueTables[team.name]}
+              leagueName={team.domesticLeagueName}
             />
           ))}
         </div>
@@ -73,28 +70,32 @@ export default async function Home() {
 function TeamCard({
   team,
   result,
-  leagueTable
+  leagueTable,
+  leagueName
 }: {
   team: (typeof teamBriefs)[number];
   result: Awaited<ReturnType<typeof fetchLatestTeamResults>>[string];
   leagueTable: Awaited<ReturnType<typeof fetchLeagueTableSlices>>[string];
+  leagueName: string;
 }) {
   return (
     <article className="team-card">
-      {result.crestUrl ? (
-        <div className="team-crest-frame">
-          <Image
-            className="team-crest"
-            src={result.crestUrl}
-            alt={`${team.name} crest`}
-            width={64}
-            height={64}
-          />
-        </div>
-      ) : (
-        <div className="team-name-fallback">{team.name}</div>
-      )}
-      <h3>{team.name}</h3>
+      <div className="team-card-header">
+        {result.crestUrl ? (
+          <div className="team-crest-frame">
+            <Image
+              className="team-crest"
+              src={result.crestUrl}
+              alt={`${team.name} crest`}
+              width={64}
+              height={64}
+            />
+          </div>
+        ) : (
+          <div className="team-name-fallback">{team.name}</div>
+        )}
+        <h3>{team.name}</h3>
+      </div>
       {result.available ? (
         <div className="latest-result">
           <p className="scoreline">{result.scoreline}</p>
@@ -103,15 +104,17 @@ function TeamCard({
       ) : (
         <p className="score-fallback">No recent match available</p>
       )}
-      <LeagueTablePreview leagueTable={leagueTable} />
+      <LeagueTablePreview leagueTable={leagueTable} leagueName={leagueName} />
     </article>
   );
 }
 
 function LeagueTablePreview({
-  leagueTable
+  leagueTable,
+  leagueName
 }: {
   leagueTable: Awaited<ReturnType<typeof fetchLeagueTableSlices>>[string];
+  leagueName: string;
 }) {
   if (!leagueTable.available) {
     return (
@@ -124,7 +127,7 @@ function LeagueTablePreview({
   return (
     <div className="league-preview" aria-label="Domestic league table position">
       <div className="league-preview-header">
-        <span>League table</span>
+        <span>{leagueName}</span>
         <span>Pts</span>
       </div>
       <div className="league-rows">
