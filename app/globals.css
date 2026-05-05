@@ -185,7 +185,7 @@ h3 {
   display: grid;
   gap: 18px;
   align-content: start;
-  min-height: 250px;
+  min-height: 420px;
   padding: 24px;
 }
 
@@ -252,6 +252,109 @@ h3 {
   padding: 10px 12px;
   font-size: 0.88rem;
   line-height: 1.2;
+}
+
+.league-preview {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: rgba(238, 242, 247, 0.68);
+}
+
+.league-preview::before,
+.league-preview::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: 24px;
+  pointer-events: none;
+}
+
+.league-preview::before {
+  top: 0;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.88), transparent);
+}
+
+.league-preview::after {
+  bottom: 0;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.88), transparent);
+}
+
+.league-preview.fallback {
+  padding: 14px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.league-preview.fallback::before,
+.league-preview.fallback::after {
+  display: none;
+}
+
+.league-preview-header,
+.league-row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 8px;
+}
+
+.league-preview-header {
+  border-bottom: 1px solid var(--border);
+  padding: 11px 12px 9px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+}
+
+.league-preview-header span:last-child,
+.league-points {
+  text-align: right;
+}
+
+.league-rows {
+  display: grid;
+  padding: 6px;
+}
+
+.league-row {
+  min-height: 34px;
+  border-radius: 8px;
+  padding: 7px 8px;
+  color: #2d3035;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.league-row.muted {
+  opacity: 0.32;
+}
+
+.league-row.current {
+  border: 2px solid #171717;
+  background: #ffffff;
+  box-shadow: 3px 3px 0 #171717;
+  color: #171717;
+}
+
+.league-position {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.league-team {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.league-points {
+  font-variant-numeric: tabular-nums;
 }
 
 .brief-list {

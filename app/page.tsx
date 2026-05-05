@@ -1,17 +1,23 @@
 import Link from "next/link";
 import Image from "next/image";
-import { fetchLatestTeamResults } from "@/lib/footballData";
+import {
+  fetchLatestTeamResults,
+  fetchLeagueTableSlices
+} from "@/lib/footballData";
 import { teamBriefs } from "@/lib/mockBriefs";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const latestResults = await fetchLatestTeamResults(
-    teamBriefs.map((team) => ({
-      id: team.footballDataTeamId,
-      name: team.name
-    }))
-  );
+  const teams = teamBriefs.map((team) => ({
+    id: team.footballDataTeamId,
+    name: team.name,
+    competitionCode: team.domesticLeagueCode
+  }));
+  const [latestResults, leagueTables] = await Promise.all([
+    fetchLatestTeamResults(teams),
+    fetchLeagueTableSlices(teams)
+  ]);
 
   return (
     <main className="site-shell">
@@ -48,6 +54,7 @@ export default async function Home() {
               key={team.name}
               team={team}
               result={latestResults[team.name]}
+              leagueTable={leagueTables[team.name]}
             />
           ))}
         </div>
@@ -65,10 +72,12 @@ export default async function Home() {
 
 function TeamCard({
   team,
-  result
+  result,
+  leagueTable
 }: {
   team: (typeof teamBriefs)[number];
   result: Awaited<ReturnType<typeof fetchLatestTeamResults>>[string];
+  leagueTable: Awaited<ReturnType<typeof fetchLeagueTableSlices>>[string];
 }) {
   return (
     <article className="team-card">
@@ -94,6 +103,42 @@ function TeamCard({
       ) : (
         <p className="score-fallback">No recent match available</p>
       )}
+      <LeagueTablePreview leagueTable={leagueTable} />
     </article>
+  );
+}
+
+function LeagueTablePreview({
+  leagueTable
+}: {
+  leagueTable: Awaited<ReturnType<typeof fetchLeagueTableSlices>>[string];
+}) {
+  if (!leagueTable.available) {
+    return (
+      <div className="league-preview fallback">
+        League table unavailable
+      </div>
+    );
+  }
+
+  return (
+    <div className="league-preview" aria-label="Domestic league table position">
+      <div className="league-preview-header">
+        <span>League table</span>
+        <span>Pts</span>
+      </div>
+      <div className="league-rows">
+        {leagueTable.rows.map((row) => (
+          <div
+            className={`league-row ${row.emphasis}`}
+            key={`${row.position}-${row.teamName}`}
+          >
+            <span className="league-position">{row.position}</span>
+            <span className="league-team">{row.teamName}</span>
+            <span className="league-points">{row.points}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }

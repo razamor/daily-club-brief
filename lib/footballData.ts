@@ -1,6 +1,7 @@
 type FootballDataTeam = {
   id: number;
   name: string;
+  shortName?: string;
   crest?: string;
 };
 
@@ -22,6 +23,21 @@ type FootballDataMatchesResponse = {
   message?: string;
 };
 
+type FootballDataStandingRow = {
+  position: number;
+  team: FootballDataTeam;
+  points: number;
+  playedGames: number;
+};
+
+type FootballDataStandingsResponse = {
+  standings?: Array<{
+    type: string;
+    table: FootballDataStandingRow[];
+  }>;
+  message?: string;
+};
+
 export type TeamResult = {
   available: boolean;
   crestUrl?: string;
@@ -29,9 +45,26 @@ export type TeamResult = {
   status: string;
 };
 
+export type LeagueTableRow = {
+  position: number;
+  teamName: string;
+  points: number;
+  isCurrentTeam: boolean;
+  emphasis: "muted" | "normal" | "current";
+};
+
+export type LeagueTableSlice = {
+  available: boolean;
+  rows: LeagueTableRow[];
+};
+
 type TeamLookup = {
   id: number;
   name: string;
+};
+
+type LeagueLookup = TeamLookup & {
+  competitionCode: string;
 };
 
 const FOOTBALL_DATA_BASE_URL = "https://api.football-data.org/v4";
@@ -40,6 +73,10 @@ const NO_RECENT_MATCH: TeamResult = {
   available: false,
   scoreline: "No recent match available",
   status: ""
+};
+const NO_LEAGUE_TABLE: LeagueTableSlice = {
+  available: false,
+  rows: []
 };
 
 function getApiKey() {
@@ -109,6 +146,42 @@ export async function fetchTeamMatches(teamId: number) {
   }
 }
 
+export async function fetchCompetitionStandings(competitionCode: string) {
+  const apiKey = getApiKey();
+
+  if (!apiKey) {
+    throw new Error("FOOTBALL_DATA_API_KEY is not configured.");
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FOOTBALL_DATA_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(
+      `${FOOTBALL_DATA_BASE_URL}/competitions/${competitionCode}/standings`,
+      {
+        cache: "no-store",
+        headers: {
+          "X-Auth-Token": apiKey
+        },
+        signal: controller.signal
+      }
+    );
+
+    const data = (await response.json()) as FootballDataStandingsResponse;
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || `football-data.org standings request failed with ${response.status}.`
+      );
+    }
+
+    return data.standings?.find((standing) => standing.type === "TOTAL")?.table || [];
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export async function fetchLatestTeamResult(team: TeamLookup): Promise<TeamResult> {
   try {
     const matches = await fetchTeamMatches(team.id);
@@ -135,4 +208,50 @@ export async function fetchLatestTeamResults(teams: TeamLookup[]) {
   );
 
   return Object.fromEntries(results) as Record<string, TeamResult>;
+}
+
+export async function fetchLeagueTableSlice(team: LeagueLookup): Promise<LeagueTableSlice> {
+  try {
+    const table = await fetchCompetitionStandings(team.competitionCode);
+    const currentIndex = table.findIndex((row) => row.team.id === team.id);
+
+    if (currentIndex === -1) {
+      return NO_LEAGUE_TABLE;
+    }
+
+    const start = Math.max(0, currentIndex - 2);
+    const end = Math.min(table.length, currentIndex + 3);
+    const rows = table.slice(start, end).map((row) => {
+      const distanceFromCurrent = Math.abs(row.position - table[currentIndex].position);
+
+      return {
+        position: row.position,
+        teamName: compactTeamName(row.team.shortName || row.team.name),
+        points: row.points,
+        isCurrentTeam: row.team.id === team.id,
+        emphasis:
+          row.team.id === team.id
+            ? "current"
+            : distanceFromCurrent === 2
+              ? "muted"
+              : "normal"
+      } satisfies LeagueTableRow;
+    });
+
+    return {
+      available: true,
+      rows
+    };
+  } catch (error) {
+    console.error(`Failed to fetch league table for ${team.name}:`, error);
+    return NO_LEAGUE_TABLE;
+  }
+}
+
+export async function fetchLeagueTableSlices(teams: LeagueLookup[]) {
+  const slices = await Promise.all(
+    teams.map(async (team) => [team.name, await fetchLeagueTableSlice(team)] as const)
+  );
+
+  return Object.fromEntries(slices) as Record<string, LeagueTableSlice>;
 }
