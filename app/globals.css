@@ -194,6 +194,29 @@ h3 {
   line-height: 1.6;
 }
 
+.latest-result {
+  display: grid;
+  gap: 8px;
+}
+
+.latest-result .scoreline,
+.score-fallback {
+  color: #2d3035;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.latest-result .match-status {
+  width: fit-content;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px;
+  background: var(--surface-soft);
+  color: var(--accent-2);
+  font-size: 0.82rem;
+  font-weight: 900;
+}
+
 .team-badge {
   --team-primary: var(--accent);
   --team-secondary: #171717;

@@ -1,8 +1,18 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import { fetchLatestTeamResults } from "@/lib/footballData";
 import { teamBriefs } from "@/lib/mockBriefs";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const latestResults = await fetchLatestTeamResults(
+    teamBriefs.map((team) => ({
+      id: team.footballDataTeamId,
+      name: team.name
+    }))
+  );
+
   return (
     <main className="site-shell">
       <header className="site-header" aria-label="Primary navigation">
@@ -34,23 +44,11 @@ export default function Home() {
 
         <div className="team-grid">
           {teamBriefs.map((team) => (
-            <article className="team-card" key={team.name}>
-              <div
-                className="team-badge large"
-                style={{
-                  "--team-primary": team.colors.primary,
-                  "--team-secondary": team.colors.secondary
-                } as CSSProperties}
-                aria-hidden="true"
-              >
-                {team.shortName}
-              </div>
-              <h3>{team.name}</h3>
-              <p>
-                Daily mock notes, source placeholders, and enough soccer chatter
-                to give the page a pulse.
-              </p>
-            </article>
+            <TeamCard
+              key={team.name}
+              team={team}
+              result={latestResults[team.name]}
+            />
           ))}
         </div>
       </section>
@@ -62,5 +60,37 @@ export default function Home() {
         </p>
       </footer>
     </main>
+  );
+}
+
+function TeamCard({
+  team,
+  result
+}: {
+  team: (typeof teamBriefs)[number];
+  result: Awaited<ReturnType<typeof fetchLatestTeamResults>>[string];
+}) {
+  return (
+    <article className="team-card">
+      <div
+        className="team-badge large"
+        style={{
+          "--team-primary": team.colors.primary,
+          "--team-secondary": team.colors.secondary
+        } as CSSProperties}
+        aria-hidden="true"
+      >
+        {team.shortName}
+      </div>
+      <h3>{team.name}</h3>
+      {result.available ? (
+        <div className="latest-result">
+          <p className="scoreline">{result.scoreline}</p>
+          <p className="match-status">{result.status}</p>
+        </div>
+      ) : (
+        <p className="score-fallback">No recent match available</p>
+      )}
+    </article>
   );
 }
