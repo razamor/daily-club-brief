@@ -1,16 +1,16 @@
-# Daily Club Brief
+# JustBanter
 
-A simple placeholder Next.js website for an AC Milan sports news summary product.
+A simple two-page Next.js MVP for a soccer daily summary app.
 
-This first version is intentionally static. It does not connect to APIs, AI services, databases, or real news sources.
+This version is intentionally static. It does not connect to APIs, AI services, databases, scraping, or real news sources.
 
 ## Features
 
-- Header and navigation
-- Hero section with the message "Your daily AC Milan briefing"
-- Placeholder daily summary card with three fake bullet points
-- Placeholder source links section
-- Simple footer
+- Home page with the JustBanter brand and a Daily Brief navigation link
+- Visual team cards for AC Milan, Leeds, and Chelsea
+- Separate Daily Brief page with mock summaries for each team
+- Placeholder source links for each team brief
+- Mock data kept in `lib/mockBriefs.ts` for easy editing later
 - Clean responsive styling
 
 ## Getting Started

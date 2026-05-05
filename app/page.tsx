@@ -1,74 +1,65 @@
-const summaryItems = [
-  "Milan are reportedly focused on sharpening their final-third movement ahead of the weekend.",
-  "A returning midfielder is expected to add more control and depth to the matchday squad.",
-  "Club staff are said to be monitoring a promising academy forward after a strong run of form."
-];
-
-const sources = [
-  "Official club updates",
-  "Italian football desk",
-  "Matchday press notes"
-];
+import Link from "next/link";
+import type { CSSProperties } from "react";
+import { teamBriefs } from "@/lib/mockBriefs";
 
 export default function Home() {
   return (
     <main className="site-shell">
       <header className="site-header" aria-label="Primary navigation">
-        <a className="brand" href="#">
+        <Link className="brand" href="/">
           <span className="brand-mark" aria-hidden="true">
-            DCB
+            JB
           </span>
-          <span>Daily Club Brief</span>
-        </a>
+          <span>JustBanter</span>
+        </Link>
         <nav className="nav-links" aria-label="Main menu">
-          <a href="#brief">Brief</a>
-          <a href="#sources">Sources</a>
-          <a href="#about">About</a>
+          <Link href="/daily-brief">Daily Brief</Link>
         </nav>
       </header>
 
-      <section className="hero" aria-labelledby="hero-title">
-        <div className="hero-copy">
-          <p className="eyebrow">AC Milan daily placeholder</p>
-          <h1 id="hero-title">Your daily AC Milan briefing</h1>
-          <p className="hero-text">
-            A clean starting point for a future sports news summary experience,
-            built now with simple placeholder content only.
-          </p>
+      <section className="home-hero" aria-labelledby="hero-title">
+        <p className="eyebrow">Soccer briefs, minus the noise</p>
+        <h1 id="hero-title">JustBanter</h1>
+        <p className="hero-text">
+          A playful daily summary MVP for keeping tabs on the clubs you care
+          about. For now, everything here is friendly placeholder content.
+        </p>
+      </section>
+
+      <section className="teams-section" aria-labelledby="teams-title">
+        <div className="section-heading">
+          <p className="eyebrow">Included clubs</p>
+          <h2 id="teams-title">Today&apos;s lineup</h2>
+        </div>
+
+        <div className="team-grid">
+          {teamBriefs.map((team) => (
+            <article className="team-card" key={team.name}>
+              <div
+                className="team-badge large"
+                style={{
+                  "--team-primary": team.colors.primary,
+                  "--team-secondary": team.colors.secondary
+                } as CSSProperties}
+                aria-hidden="true"
+              >
+                {team.shortName}
+              </div>
+              <h3>{team.name}</h3>
+              <p>
+                Daily mock notes, source placeholders, and enough soccer chatter
+                to give the page a pulse.
+              </p>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section className="content-grid" aria-label="Daily brief content">
-        <article className="summary-card" id="brief">
-          <div className="section-heading">
-            <p className="eyebrow">Today&apos;s brief</p>
-            <h2>Three things to know</h2>
-          </div>
-          <ul>
-            {summaryItems.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </article>
-
-        <aside className="sources-panel" id="sources">
-          <div className="section-heading">
-            <p className="eyebrow">Placeholder links</p>
-            <h2>Source list</h2>
-          </div>
-          <div className="source-links">
-            {sources.map((source) => (
-              <a href="#" key={source} aria-label={`${source} placeholder link`}>
-                {source}
-              </a>
-            ))}
-          </div>
-        </aside>
-      </section>
-
-      <footer className="site-footer" id="about">
-        <p>Daily Club Brief is a placeholder AC Milan news summary concept.</p>
-        <p>No APIs, AI, database, or live news sources are connected.</p>
+      <footer className="site-footer">
+        <p>JustBanter is a two-page MVP with mock content only.</p>
+        <p>
+          <Link href="/daily-brief">Read the Daily Brief</Link>
+        </p>
       </footer>
     </main>
   );
