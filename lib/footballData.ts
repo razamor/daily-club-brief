@@ -215,25 +215,13 @@ function formatLeagueTable(teamId: number, table: FootballDataStandingRow[]): Le
     };
   }
 
-  const start = Math.max(0, currentIndex - 2);
-  const end = Math.min(table.length, currentIndex + 3);
-  const currentPosition = table[currentIndex].position;
-  const rows = table.slice(start, end).map((row) => {
-    const distanceFromCurrent = Math.abs(row.position - currentPosition);
-
-    return {
-      position: row.position,
-      teamName: compactTeamName(row.team.shortName || row.team.name),
-      points: row.points,
-      isCurrentTeam: row.team.id === teamId,
-      emphasis:
-        row.team.id === teamId
-          ? "current"
-          : distanceFromCurrent === 2
-            ? "muted"
-            : "normal"
-    } satisfies LeagueTableRow;
-  });
+  const rows = table.map((row) => ({
+    position: row.position,
+    teamName: compactTeamName(row.team.shortName || row.team.name),
+    points: row.points,
+    isCurrentTeam: row.team.id === teamId,
+    emphasis: row.team.id === teamId ? "current" : "normal"
+  })) satisfies LeagueTableRow[];
 
   return {
     available: true,

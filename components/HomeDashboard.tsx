@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FootballSnapshot, FootballTeamSnapshot } from "@/lib/footballData";
 
 type HomeDashboardProps = {
@@ -83,6 +83,14 @@ function TeamCard({ team }: { team: FootballTeamSnapshot }) {
 }
 
 function LeagueTablePreview({ team }: { team: FootballTeamSnapshot }) {
+  const currentTeamRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    currentTeamRef.current?.scrollIntoView({
+      block: "center"
+    });
+  }, [team.id, team.leagueTable.rows]);
+
   if (!team.leagueTable.available) {
     return <div className="league-preview fallback">League table unavailable</div>;
   }
@@ -93,11 +101,12 @@ function LeagueTablePreview({ team }: { team: FootballTeamSnapshot }) {
         <span>{team.leagueName}</span>
         <span>Pts</span>
       </div>
-      <div className="league-rows">
+      <div className="league-rows" aria-label={`${team.leagueName} standings`} tabIndex={0}>
         {team.leagueTable.rows.map((row) => (
           <div
             className={`league-row ${row.emphasis}`}
             key={`${row.position}-${row.teamName}`}
+            ref={row.isCurrentTeam ? currentTeamRef : undefined}
           >
             <span className="league-position">{row.position}</span>
             <span className="league-team">{row.teamName}</span>
