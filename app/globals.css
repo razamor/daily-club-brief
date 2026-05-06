@@ -238,6 +238,14 @@ h3 {
   font-weight: 900;
 }
 
+.next-match {
+  border-left: 3px solid var(--accent-3);
+  padding-left: 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
 .team-crest-frame {
   display: grid;
   flex: 0 0 auto;
