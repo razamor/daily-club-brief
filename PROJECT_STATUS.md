@@ -10,7 +10,6 @@
 Stabilize the MVP foundation before adding larger features.
 
 ## Active Tasks
-- [ ] Create `AGENTS.md`
 - [ ] Create initial Codex skills
 
 ## Pending Major Tasks
@@ -36,6 +35,7 @@ Stabilize the MVP foundation before adding larger features.
 - API key should stay server-side only
 
 ## Recently Completed
+- [x] Created `AGENTS.md`
 - [x] Protected `/api/football-data/refresh` with `CRON_SECRET`
 - [x] Fixed schedule separator encoding bug using `\u00b7`
 - [x] Made standings tables scrollable
