@@ -26,7 +26,12 @@ Create `.env.local` with:
 
 ```bash
 FOOTBALL_DATA_API_KEY=your_api_key
+CRON_SECRET=your_random_cron_secret
 ```
+
+The refresh endpoint at `/api/football-data/refresh` requires
+`Authorization: Bearer <CRON_SECRET>`. Vercel Cron automatically sends this
+header when `CRON_SECRET` is configured in the Vercel project environment.
 
 ## Getting Started
 
