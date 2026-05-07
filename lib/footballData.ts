@@ -201,7 +201,7 @@ function formatSchedule(teamId: number, match?: FootballDataMatch): TeamSchedule
     available: true,
     label: `Next: ${compactTeamName(match.homeTeam.name)} vs ${compactTeamName(
       match.awayTeam.name
-    )} · ${formatCentralDate(match.utcDate)}`
+    )} \u00b7 ${formatCentralDate(match.utcDate)}`
   };
 }
 
