@@ -10,7 +10,7 @@
 Stabilize the MVP foundation before adding larger features.
 
 ## Active Tasks
-- [ ] Create initial Codex skills
+No active tasks right now.
 
 ## Pending Major Tasks
 - [ ] Plan durable cache/database replacement for in-memory cache
@@ -35,6 +35,7 @@ Stabilize the MVP foundation before adding larger features.
 - API key should stay server-side only
 
 ## Recently Completed
+- [x] Created initial Codex skills
 - [x] Created `AGENTS.md`
 - [x] Protected `/api/football-data/refresh` with `CRON_SECRET`
 - [x] Fixed schedule separator encoding bug using `\u00b7`
@@ -43,4 +44,4 @@ Stabilize the MVP foundation before adding larger features.
 - [x] Added club crests and standings previews
 
 ## Next Recommended Step
-Create `AGENTS.md` so future Codex sessions have clear project-specific instructions.
+Plan durable cache/database replacement for the temporary in-memory cache.
